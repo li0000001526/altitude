@@ -1,1 +1,5 @@
-# Altitude site - 暂无广告联盟，预留 ads.txt
+# Altitude site (izxgs.li00000.xyz)
+# 第三方广告网络：profitableratecpmnetwork（social-bar / popunder）
+# 联盟/发布商 ID 取自脚本域名 pl31347728.profitableratecpmnetwork.com
+# 占位条目——若该网络要求授权卖方声明，请按网络方提供的准确 seller 域+pub ID 补全
+# （当前按「未授权直接流量」处理，故此文件保留说明、不放伪造的 DIRECT 授权行）
