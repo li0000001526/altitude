@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<link rel="canonical" href="https://izxgs.li00000.xyz/" />
+<style>
+.seo-outer{max-width:1080px;margin:0 auto;padding:0 20px 40px}
+.seo{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;box-shadow:var(--shadow)}
+.seo h2{font-size:17px;font-weight:600;margin-bottom:10px;color:var(--ink)}
+.seo h3{font-size:14px;color:var(--accent);margin:16px 0 6px}
+.seo p,.seo li{font-size:13px;color:var(--ink2);line-height:1.75}
+.seo b{color:var(--ink)}
+.seo table{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0 4px}
+.seo th,.seo td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+.seo th{color:var(--ink3);text-transform:uppercase;font-size:11px;letter-spacing:.5px}
+.seo td:first-child{color:var(--ink);font-weight:600}
+.seo .ext a{color:var(--accent);text-decoration:none}
+.seo .ext a:hover{text-decoration:underline}
+</style>
+<meta name="description" content="在线海拔测量工具：输入城市或经纬度，查询该点真实高程、沿线 25 公里剖面、大气压与等效含氧量估算，并附高原反应与血氧风险提示。" />
+<meta name="keywords" content="海拔测量,海拔查询,海拔高度,城市海拔,高原反应,高海拔含氧量,大气压对照表,高原血氧,血氧饱和度,珠穆朗玛峰海拔,贡嘎山海拔,海拔大气压,海拔高度计算器,elevation calculator,altitude calculator,atmospheric pressure by altitude,oxygen level at high altitude" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="海拔测量 · Altitude — 真实高程 / 大气压 / 含氧量在线查询" />
+<meta property="og:description" content="输入城市或坐标，返回该点真实高程与 25 km 沿线剖面，并估算大气压与等效含氧量，附高原反应与血氧风险提示。" />
+<meta property="og:url" content="https://izxgs.li00000.xyz/" />
+<meta property="og:site_name" content="海拔测量 · Altitude" />
+<meta property="og:locale" content="zh_CN" />
+<meta name="twitter:card" content="summary" />
+<script type="application/ld+json">
+{"@context":"https://***","@type":"WebApplication","name":"海拔测量 · Altitude","alternateName":["海拔查询工具","海拔高度计算器","高海拔含氧量估算","大气压海拔对照","高原反应提示工具"],"url":"https://izxgs.li00000.xyz/","applicationCategory":"OtherApplication","operatingSystem":"Any","inLanguage":"zh-CN","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"featureList":["城市/经纬度查真实高程","沿线 25km 高程剖面","大气压估算","含氧量估算","高原反应风险提示"],"publisher":{"@type":"Organization","name":"li00000 在线工具集","url":"https://li00000.xyz/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://***","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"海拔高的大气压和含氧量怎么估算？","acceptedAnswer":{"@type":"Answer","text":"以海平面 1013.25 hPa、含氧量 100% 为基准，随高度按指数衰减：大气压 ≈ 1013.25×e^(−h/8430)，等效含氧量 ≈ 100×e^(−h/8500)。这是标准大气模型近似，非精确气象值。"}},
+{"@type":"Question","name":"多高会高原反应？","acceptedAnswer":{"@type":"Answer","text":"一般 2500m 以上进入潜在高原反应（AMS）区，3000m、4000m 风险逐级升高。高于 4000m 属极高海拔，务必阶梯适应、避免剧烈运动与饮酒，必要时携带血氧仪并就医。"}},
+{"@type":"Question","name":"血氧饱和度多少算危险？","acceptedAnswer":{"@type":"Answer","text":"平原正常血氧饱和度约 95%–100%；高海拔下会自然下降，若低于 90% 常提示明显缺氧，建议吸氧、休息并监测，严重呼吸困难或持续头痛需及时下撤就医。"}},
+{"@type":"Question","name":"拉萨、珠峰大本营海拔多少？","acceptedAnswer":{"@type":"Answer","text":"拉萨约 3650 m，珠峰大本营约 5200 m，珠峰顶 8848.86 m。本工具可直接输入这些地点查询，得到实时高程与沿线剖面。"}}
+]}
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海拔测量 · Altitude</title>
+<style>
+:root{
+  --bg:#0b0f14;
+  --bg2:#11161d;
+  --panel:#141a22;
+  --panel2:#1a212b;
+  --line:#242d38;
+  --line2:#2c3744;
+  --ink:#eaf1f8;
+  --ink2:#9fb0c2;
+  --ink3:#6b7a8c;
+  --accent:#4cc7f5;      /* 高空/信息蓝 */
+  --accent2:#7bd389;     /* 低海拔/绿 */
+  --warn:#f5c04a;        /* 高原/金 */
+  --danger:#ff7a7a;     /* 危险红 */
+  --shadow:0 12px 40px rgba(0,0,0,.45);
+  --r:14px;
+  font-size:15px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* ---------- 背景美术层（Agnes 生成后替换） ---------- */
+.bg-art{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(120% 80% at 70% 0%, #16202e 0%, transparent 55%),
+    radial-gradient(140% 90% at 20% 100%, #0e1722 0%, transparent 60%),
+    var(--bg);
+  background-blend-mode:screen;
+}
+.bg-art::before{
+  content:"";position:absolute;inset:0;
+  /* 程序化兜底：等高线 + 山峰剪影。Agnes 图注入后会被整体覆盖 */
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'><defs><linearGradient id='sky' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%230b0f14'/><stop offset='1' stop-color='%230e1622'/></linearGradient></defs><rect width='100%25' height='100%25' fill='url(%23sky)'/><g stroke='%231c2a3a' stroke-width='1' fill='none' opacity='.5'><path d='M0,320 L200,280 L400,330 L600,270 L800,310 L1000,260 L1200,300 L1400,270 L1600,310'/><path d='M0,380 L200,350 L400,400 L600,340 L800,390 L1000,330 L1200,380 L1400,350 L1600,390'/><path d='M0,440 L200,420 L400,460 L600,410 L800,450 L1000,400 L1200,440 L1400,420 L1600,450'/></g><g fill='%23121b27'><path d='M0,560 L180,470 L320,540 L460,430 L620,530 L760,450 L900,540 L1040,460 L1200,540 L1340,480 L1600,560 L1600,800 L0,800 Z'/></g></svg>");
+  background-size:cover;background-position:center;
+  opacity:.85;
+}
+.bg-art.has-agnes::before{display:none}
+.bg-art::after{ /* 暗角，保证文字可读 */
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 50% 30%, transparent 40%, rgba(6,9,13,.78) 100%);
+}
+/* ---------- 布局 ---------- */
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:26px 20px 60px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:30px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:46px;height:46px;border-radius:12px;flex:0 0 46px;
+  background:conic-gradient(from 210deg,#4cc7f5,#7bd389,#f5c04a,#ff7a7a,#4cc7f5);
+  position:relative;box-shadow:var(--shadow);
+}
+.logo::after{
+  content:"";position:absolute;inset:5px;border-radius:8px;background:var(--panel);
+}
+.logo::before{
+  content:"▲";position:absolute;inset:0;display:grid;place-items:center;
+  font-size:15px;color:var(--accent);z-index:1;
+}
+.brand h1{font-size:20px;font-weight:700;letter-spacing:.5px}
+.brand p{font-size:12px;color:var(--ink3)}
+.hero{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:26px;box-shadow:var(--shadow);
+}
+.hero h2{font-size:17px;font-weight:600;margin-bottom:4px}
+.hero .sub{font-size:13px;color:var(--ink2);margin-bottom:20px}
+/* 搜索 */
+.search-row{display:flex;gap:10px;flex-wrap:wrap}
+.search{flex:1;min-width:240px;display:flex;gap:10px;flex-wrap:wrap}
+.field{position:relative;flex:1;min-width:220px}
+.field input,.field select{
+  width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--line2);
+  background:var(--bg2);color:var(--ink);font-size:15px;outline:none;transition:.18s;
+}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(76,199,245,.15)}
+.field .geo-hint{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--ink3);pointer-events:none}
+.btn{
+  padding:13px 22px;border-radius:11px;border:1px solid var(--accent);
+  background:linear-gradient(180deg,rgba(76,199,245,.18),rgba(76,199,245,.06));
+  color:var(--accent);font-size:15px;font-weight:600;cursor:pointer;transition:.18s;
+  white-space:nowrap;
+}
+.btn:hover{background:rgba(76,199,245,.28);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{
+  padding:7px 13px;border-radius:20px;border:1px solid var(--line2);background:var(--bg2);
+  color:var(--ink2);font-size:12.5px;cursor:pointer;transition:.15s;
+}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+/* 坐标输入（高级） */
+.coords{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;padding:12px;
+  border-radius:11px;background:var(--bg2);border:1px dashed var(--line2);
+}
+.coords label{font-size:13px;color:var(--ink2);min-width:64px}
+.coords input{
+  width:110px;padding:9px 11px;border-radius:9px;border:1px solid var(--line2);
+  background:var(--panel);color:var(--ink);font-size:14px;outline:none;
+}
+.coords input:focus{border-color:var(--accent)}
+.coords .go{
+  padding:9px 16px;border-radius:9px;border:1px solid var(--line2);background:var(--panel2);
+  color:var(--ink2);font-size:13px;cursor:pointer;transition:.15s;
+}
+.coords .go:hover{border-color:var(--accent);color:var(--accent)}
+/* ---------- 结果区 ---------- */
+#result{margin-top:26px;display:none}
+#result.show{display:block;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.readout{
+  background:linear-gradient(160deg,var(--panel),var(--panel2));
+  border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:var(--shadow);
+}
+.readout .place{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.readout .place .name{font-size:22px;font-weight:700}
+.readout .place .coords{font-size:12.5px;color:var(--ink3);font-family:ui-monospace,monospace}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.metric{
+  background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px;
+}
+.metric .k{font-size:12px;color:var(--ink3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px}
+.metric .v{font-size:30px;font-weight:700;font-family:ui-monospace,monospace;line-height:1}
+.metric .u{font-size:14px;font-weight:500;color:var(--ink2);margin-left:4px}
+.metric .tag{display:inline-block;margin-top:8px;font-size:11.5px;padding:3px 9px;border-radius:20px}
+/* 海拔分级标签色 */
+.tag-low{background:rgba(123,211,137,.15);color:var(--accent2);border:1px solid rgba(123,211,137,.35)}
+.tag-mid{background:rgba(76,199,245,.15);color:var(--accent);border:1px solid rgba(76,199,245,.35)}
+.tag-high{background:rgba(245,192,74,.15);color:var(--warn);border:1px solid rgba(245,192,74,.35)}
+.tag-danger{background:rgba(255,122,122,.15);color:var(--danger);border:1px solid rgba(255,122,122,.35)}
+/* 剖面图 */
+.profile{margin-top:16px}
+.profile h3{font-size:14px;font-weight:600;color:var(--ink2);margin-bottom:10px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.profile h3 .lg{font-size:12px;color:var(--ink3);font-weight:400}
+svg.profile-svg{width:100%;height:220px;background:var(--bg2);border:1px solid var(--line);border-radius:12px}
+#status{margin-top:14px;font-size:13px;color:var(--ink3);display:none}
+#status.show{display:block}
+#status.err{color:var(--danger)}
+/* 高原提示 */
+.advice{margin-top:16px;padding:14px 16px;border-radius:11px;background:rgba(245,192,74,.08);border:1px solid rgba(245,192,74,.25);font-size:13px;color:var(--ink2);display:none}
+.advice.show{display:block}
+.advice b{color:var(--warn)}
+footer{margin-top:40px;text-align:center;font-size:12px;color:var(--ink3)}
+footer a{color:var(--ink2);text-decoration:none}
+/* loading */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line2);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* lang switch */
+.lang-switch{margin-left:8px}
+.lang-btn{
+  min-width:34px;height:34px;padding:0 10px;border-radius:9px;
+  border:1px solid var(--line2);background:var(--bg2);color:var(--ink3);
+  font-size:13px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit;
+}
+.lang-btn:hover{border-color:var(--accent);color:var(--ink)}
+.lang-btn.active{border-color:var(--accent);background:rgba(76,199,245,.15);color:var(--accent)}
+@media(max-width:640px){
+  .metric .v{font-size:24px}
+  .hero{padding:18px}
+}
+</style>
+</head>
+<body>
+<div class="bg-art" id="bgArt"></div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1 id="t-brand">海拔测量 · Altitude</h1>
+        <p id="t-sub">真实高程查询 · 沿线剖面 · 高原提示</p>
+      </div>
+    </div>
+    <div class="lang-switch" id="langSwitch" style="display:flex;gap:6px">
+      <button class="lang-btn active" data-lang="zh-Hans" title="简体中文">简</button>
+      <button class="lang-btn" data-lang="zh-Hant" title="繁體中文">繁</button>
+      <button class="lang-btn" data-lang="en" title="English">EN</button>
+      <button class="lang-btn" data-lang="ja" title="日本語">日</button>
+      <button class="lang-btn" data-lang="ko" title="한국어">한</button>
+    </div>
+    <div style="font-size:12px;color:var(--ink3)" id="t-src">数据源：Open-Meteo Elevation API</div>
+  </header>
+
+  <section class="hero">
+    <h2 id="t-hero-title">查一个地点的真实海拔</h2>
+    <p class="sub" id="t-hero-sub">输入城市或坐标，返回该点高程与 25 公里沿线剖面。</p>
+    <div class="search">
+      <div class="field">
+        <input id="placeInput" type="text" placeholder="输入城市，如：拉萨 / Everest Base Camp / 杭州" autocomplete="off">
+      </div>
+      <button class="btn" id="searchBtn" data-key="search">测量海拔</button>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="coords">
+      <label id="t-lat" data-key="lat">纬度</label><input id="latIn" type="number" step="0.0001" min="-90" max="90" placeholder="36.0671">
+      <label id="t-lon" data-key="lon">经度</label><input id="lonIn" type="number" step="0.0001" min="-180" max="180" placeholder="103.8343">
+      <button class="go" id="coordBtn" data-key="coord-btn">按坐标测量</button>
+      <span id="t-coord-hint" data-key="coord-hint" style="font-size:12px;color:var(--ink3)">直接输入坐标可绕过城市解析</span>
+    </div>
+  </section>
+
+  <div id="result">
+    <div class="readout">
+      <div class="place">
+        <span class="name" id="rName">—</span>
+        <span class="coords" id="rCoords">—</span>
+      </div>
+      <div class="grid">
+        <div class="metric">
+          <div class="k" id="k-alt">海拔</div>
+          <div><span class="v" id="mAlt">—</span><span class="u">m</span></div>
+          <span class="tag" id="mTag"></span>
+        </div>
+        <div class="metric">
+          <div class="k" id="k-press">大气压（估）</div>
+          <div><span class="v" id="mPress">—</span><span class="u">hPa</span></div>
+          <span class="tag" id="pTag"></span>
+        </div>
+        <div class="metric">
+          <div class="k" id="k-oxy">等效含氧量</div>
+          <div><span class="v" id="mOxy">—</span><span class="u">%</span></div>
+          <span class="tag" id="oTag"></span>
+        </div>
+        <div class="metric">
+          <div class="k" id="k-peak">沿线最高峰</div>
+          <div><span class="v" id="mPeak">—</span><span class="u">m</span></div>
+          <span class="tag" id="pkTag"></span>
+        </div>
+      </div>
+
+      <div class="advice" id="advice"></div>
+
+      <div class="profile">
+        <h3><span id="profile-title">沿线 25 km 高程剖面</span> <span class="lg" id="profileNote"></span></h3>
+        <svg class="profile-svg" id="profileSvg" viewBox="0 0 1000 220" preserveAspectRatio="none"></svg>
+      </div>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+/* ============================================================
+   占位：Agnes 生成的美术。注入后设为 dataURI 字符串，并在 body 加 has-agnes。
+   ============================================================ */
+const ART_BG = "__ART_BG__"; // ← 替换为 data:image/png;base64,... 或 https url
+if (ART_BG && ART_BG.indexOf("__ART") === -1) {
+  document.getElementById("bgArt").style.backgroundImage = "url('" + ART_BG + "')";
+  document.getElementById("bgArt").classList.add("has-agnes");
+}
+/* ============================================================ */
+
+const $ = id => document.getElementById(id);
+const CHIPS = ["拉萨","珠穆朗玛峰大本营","成都","乌鲁木齐","张家界","黄山","珠穆朗玛峰","华山","长白山","五台山"];
+
+/* ================= i18n 多语言 =================
+   5 语言：zh-Hans / zh-Hant / en / ja / ko。
+   - 文案集中管理，DOM 上的硬编码标签都改成 data-key 驱动
+   - 切换语言：更新 document.documentElement.lang、html 标签、
+     所有 [data-key] 文本、动态文案（band/advice/profileNote）、chip 提示
+   - 偏好 localStorage 持久化，下次进来保持上次语言
+   未命中 key 时回落 zh-Hans。 */
+const I18N = {
+  "zh-Hans": {
+    lang: "zh-CN", label: "简体中文",
+    "brand": "海拔测量 · Altitude", "sub": "真实高程查询 · 沿线剖面 · 高原提示",
+    "src": "数据源：Open-Meteo Elevation API",
+    "hero-title": "查一个地点的真实海拔", "hero-sub": "输入城市或坐标，返回该点高程与 25 公里沿线剖面。",
+    "search": "测量海拔", "coord-btn": "按坐标测量", "coord-hint": "直接输入坐标可绕过城市解析",
+    "lat": "纬度", "lon": "经度",
+    "k-alt": "海拔", "k-press": "大气压（估）", "k-oxy": "等效含氧量", "k-peak": "沿线最高峰",
+    "profile-title": "沿线 25 km 高程剖面", "profile-note": "采样 {n} 点 · 覆盖约 {km} km",
+    "profile-empty": "剖面数据暂缺", "start": "起点",
+    "adv-1500": "<b>中等海拔。</b>多数人适应性良好，少量人可能有轻微气短。行动放缓即可。",
+    "adv-3000": "<b>高海拔（高原反应区）。</b>建议提前 1–2 天适应，避免剧烈运动，多补水，警惕头痛/气短。",
+    "adv-4000": "<b>极高海拔。</b>海拔超过 4000m，高原反应风险显著升高。务必充分适应、必要时携带血氧仪，避免饮酒，关注身体状况。",
+    "loading": "正在获取高程数据…",
+    "geo-fail": "城市解析失败：{msg}。可用坐标直接测量。",
+    "coord-invalid": "坐标无效。",
+    "degraded": "剖面接口暂不可达，当前值为本地估算（仅供参考）。",
+    "band-low": "低海拔", "band-mid": "中低海拔", "band-high": "高海拔", "band-danger": "极高海拔",
+    "pband-950": "正常", "pband-850": "偏低", "pband-750": "显著偏低", "pband-danger": "稀薄",
+    "oband-95": "充足", "oband-80": "适中", "oband-65": "偏稀薄", "oband-danger": "显著稀薄",
+    "coord-label": "坐标点 ({lat}, {lon})",
+    "footer": "数据：<a href=\"https://open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo</a> · 地理解析：<a href=\"https://geocoding-api.open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo Geocoding</a> · 高程剖面：沿线 25 km 采样<br>大气压 / 含氧量由海拔公式估算，仅供参考，非精确气象值。"
+  },
+  "zh-Hant": {
+    lang: "zh-Hant", label: "繁體中文",
+    "brand": "海拔測量 · Altitude", "sub": "真實高程查詢 · 沿線剖面 · 高原提示",
+    "src": "資料源：Open-Meteo Elevation API",
+    "hero-title": "查一個地點的真實海拔", "hero-sub": "輸入城市或坐標，返回該點高程與 25 公里沿線剖面。",
+    "search": "測量海拔", "coord-btn": "按坐標測量", "coord-hint": "直接輸入坐標可繞過城市解析",
+    "lat": "緯度", "lon": "經度",
+    "k-alt": "海拔", "k-press": "大氣壓（估）", "k-oxy": "等效含氧量", "k-peak": "沿線最高峰",
+    "profile-title": "沿線 25 km 高程剖面", "profile-note": "取樣 {n} 點 · 覆蓋約 {km} km",
+    "profile-empty": "剖面資料暫缺", "start": "起點",
+    "adv-1500": "<b>中等海拔。</b>多數人適應性良好，少量人可能有輕微氣短。行動放緩即可。",
+    "adv-3000": "<b>高海拔（高原反應區）。</b>建議提前 1–2 天適應，避免劇烈運動，多補水，警惕頭痛/氣短。",
+    "adv-4000": "<b>極高海拔。</b>海拔超過 4000m，高原反應風險顯著升高。務必充分適應、必要時攜帶血氧儀，避免飲酒，關注身體狀況。",
+    "loading": "正在取得高程資料…",
+    "geo-fail": "城市解析失敗：{msg}。可用坐標直接測量。",
+    "coord-invalid": "坐標無效。",
+    "degraded": "剖面介面暫不可達，當前值為本地估算（僅供參考）。",
+    "band-low": "低海拔", "band-mid": "中低海拔", "band-high": "高海拔", "band-danger": "極高海拔",
+    "pband-950": "正常", "pband-850": "偏低", "pband-750": "顯著偏低", "pband-danger": "稀薄",
+    "oband-95": "充足", "oband-80": "適中", "oband-65": "偏稀薄", "oband-danger": "顯著稀薄",
+    "coord-label": "坐標點 ({lat}, {lon})",
+    "footer": "資料：<a href=\"https://open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo</a> · 地理解析：<a href=\"https://geocoding-api.open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo Geocoding</a> · 高程剖面：沿線 25 km 取樣<br>大氣壓 / 含氧量由海拔公式估算，僅供參考，非精確氣象值。"
+  },
+  "en": {
+    lang: "en", label: "English",
+    "brand": "Altitude · Elevation", "sub": "Real elevation · cross-section · highland notes",
+    "src": "Data source: Open-Meteo Elevation API",
+    "hero-title": "Real elevation of any place", "hero-sub": "Enter a city or coordinates to get its elevation and a 25 km cross-section.",
+    "search": "Measure", "coord-btn": "Measure coords", "coord-hint": "Skip city lookup by entering coordinates directly",
+    "lat": "Latitude", "lon": "Longitude",
+    "k-alt": "Elevation", "k-press": "Pressure (est.)", "k-oxy": "O₂ equivalence", "k-peak": "Peak on route",
+    "profile-title": "25 km cross-section", "profile-note": "{n} samples · ~{km} km span",
+    "profile-empty": "No profile data", "start": "Start",
+    "adv-1500": "<b>Moderate elevation.</b> Most people cope fine; a few may feel short of breath. Move slowly.",
+    "adv-3000": "<b>High elevation (altitude-sickness zone).</b> Acclimatise 1–2 days ahead; avoid strenuous effort; hydrate; watch for headaches / breathlessness.",
+    "adv-4000": "<b>Extreme elevation.</b> Above 4000 m, altitude-sickness risk is significant. Acclimatise well, carry a pulse oximeter, avoid alcohol, monitor yourself.",
+    "loading": "Fetching elevation data…",
+    "geo-fail": "City lookup failed: {msg}. Try measuring with coordinates.",
+    "coord-invalid": "Invalid coordinates.",
+    "degraded": "Profile API unreachable — values shown are local estimates (reference only).",
+    "band-low": "Low", "band-mid": "Low-mid", "band-high": "High", "band-danger": "Extreme",
+    "pband-950": "Normal", "pband-850": "Lower", "pband-750": "Well below", "pband-danger": "Thin",
+    "oband-95": "Sufficient", "oband-80": "Adequate", "oband-65": "Reduced", "oband-danger": "Well reduced",
+    "coord-label": "Point ({lat}, {lon})",
+    "footer": "Data: <a href=\"https://open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo</a> · Geocoding: <a href=\"https://geocoding-api.open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo</a> · 25 km cross-section samples<br>Pressure / O₂ are formula estimates, not exact weather values."
+  },
+  "ja": {
+    lang: "ja", label: "日本語",
+    "brand": "標高測定 · Altitude", "sub": "実標高クエリ · 断面 · 高原アドバイス",
+    "src": "データ：Open-Meteo Elevation API",
+    "hero-title": "実標高を照会", "hero-sub": "都市名または座標を入力すると、その地点の標高と25km断面を表示します。",
+    "search": "測定", "coord-btn": "座標で測定", "coord-hint": "座標入力で都市解析をスキップ",
+    "lat": "緯度", "lon": "経度",
+    "k-alt": "標高", "k-press": "気圧(推定)", "k-oxy": "酸素換算", "k-peak": "ルートの最高点",
+    "profile-title": "25 km 高程断面", "profile-note": "{n} サンプル · 約 {km} km 区間",
+    "profile-empty": "断面データなし", "start": "起点",
+    "adv-1500": "<b>中程度の標高。</b> 大半は順応良好。少数が息苦しさを感じるかも。動作を緩やかに。",
+    "adv-3000": "<b>高標高（高山病域）。</b> 1〜2日前から順応し、激務を避け、水分補給を。頭痛・息切れに注意。",
+    "adv-4000": "<b>極高標高。</b> 4000m超は高山病リスクが急上昇。徹底した順応、酸素濃度計の携行、飲酒を避け体調管理を。",
+    "loading": "標高データを取得中…",
+    "geo-fail": "都市解析に失敗：{msg}。座標での測定に切り替えてください。",
+    "coord-invalid": "無効な座標です。",
+    "degraded": "断面APIが到達不能。現在の値は推定値（参考値）です。",
+    "band-low": "低", "band-mid": "中低", "band-high": "高", "band-danger": "極高",
+    "pband-950": "正常", "pband-850": "やや低い", "pband-750": "かなり低い", "pband-danger": "薄",
+    "oband-95": "充足", "oband-80": "適正", "oband-65": "やや薄い", "oband-danger": "かなり薄い",
+    "coord-label": "座標点 ({lat}, {lon})",
+    "footer": "データ：<a href=\"https://open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo</a> · 地理解析：<a href=\"https://geocoding-api.open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo</a> · 25 km 断面サンプリング<br>気圧・酸素量はいずれも公式推定値であり、正確な気象値ではありません。"
+  },
+  "ko": {
+    lang: "ko", label: "한국어",
+    "brand": "고도 측정 · Altitude", "sub": "실측 고도 · 단면 · 고원 안내",
+    "src": "데이터: Open-Meteo Elevation API",
+    "hero-title": "실제 고도 조회", "hero-sub": "도시 또는 좌표를 입력하면 그 지점의 고도와 25km 단면을 보입니다.",
+    "search": "측정", "coord-btn": "좌표로 측정", "coord-hint": "좌표 입력 시 도시 조회 스킵",
+    "lat": "위도", "lon": "경도",
+    "k-alt": "고도", "k-press": "기압(추정)", "k-oxy": "산소 환산", "k-peak": "노선 최고봉",
+    "profile-title": "25 km 고도 단면", "profile-note": "{n} 샘플 · 약 {km} km 구간",
+    "profile-empty": "단면 데이터 없음", "start": "출발",
+    "adv-1500": "<b>중간 고도.</b> 대부분 적응 양호, 일부가 가벼운 호흡 곤란 가능. 천천히 움직이기.",
+    "adv-3000": "<b>고 고도(고원병 구간).</b> 1–2일 전 적응, 격한 운동 자제, 수분 보충, 두통/호흡곤란 주의.",
+    "adv-4000": "<b>극고도.</b> 4000m 초과 시 고원병 위험 크게 상승. 충분한 적응, 산소포화도계 지참, 음주 자제, 건강 관리.",
+    "loading": "고도 데이터 가져오는 중…",
+    "geo-fail": "도시 조회 실패: {msg}. 좌표로 측정하세요.",
+    "coord-invalid": "잘못된 좌표입니다.",
+    "degraded": "단면 API 도달 불가. 현재 값은 추정치(참고용)입니다.",
+    "band-low": "낮음", "band-mid": "중·저", "band-high": "높음", "band-danger": "극고",
+    "pband-950": "정상", "pband-850": "낮음", "pband-750": "매우 낮음", "pband-danger": "희박",
+    "oband-95": "충분", "oband-80": "적정", "oband-65": "약간 희박", "oband-danger": "매우 희박",
+    "coord-label": "좌표점 ({lat}, {lon})",
+    "footer": "데이터: <a href=\"https://open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo</a> · 지리해석: <a href=\"https://geocoding-api.open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo</a> · 25 km 단면 샘플링<br>기압/산소는 공식 추정치이며 정확한 기상값이 아님."
+  }
+};
+
+/* 语言驱动 */
+let CURRENT_LANG = localStorage.getItem("alt_lang") || "zh-Hans";
+function t(key, vars){
+  const pack = I18N[CURRENT_LANG] || I18N["zh-Hans"];
+  let s = pack[key];
+  if (s === undefined) s = I18N["zh-Hans"][key] || "";
+  if (vars) for (const k in vars) s = s.replace(new RegExp("\\{"+k+"\\}","g"), vars[k]);
+  return s;
+}
+function applyLang(lang){
+  if (!I18N[lang]) return;
+  CURRENT_LANG = lang;
+  localStorage.setItem("alt_lang", lang);
+  const pack = I18N[lang];
+  document.documentElement.lang = pack.lang;
+  document.title = pack.brand;
+  // 静态文案：按 DOM 上的 data-key 注入（值即 I18N 键名）
+  document.querySelectorAll("[data-key]").forEach(el=>{
+    const k = el.dataset.key;
+    if (pack[k] !== undefined) el.textContent = pack[k];
+  });
+  // 动态字段（DOM 里用 id 直接取的）
+  const idMap = {
+    "t-brand":"brand", "t-sub":"sub", "t-src":"src",
+    "t-hero-title":"hero-title", "t-hero-sub":"hero-sub",
+    "t-lat":"lat", "t-lon":"lon",
+    "k-alt":"k-alt", "k-press":"k-press", "k-oxy":"k-oxy", "k-peak":"k-peak",
+    "profile-title":"profile-title"
+  };
+  for (const id in idMap){
+    const el = document.getElementById(id);
+    if (el) el.textContent = pack[idMap[id]] || I18N["zh-Hans"][idMap[id]] || "";
+  }
+  $("footer").innerHTML = pack.footer;
+  // 重新渲染 chip（语言相关）
+  $("chips").innerHTML = CHIPS.map(c => `<span class="chip" data-v="${c}">${c}</span>`).join("");
+  // 按钮高亮
+  document.querySelectorAll(".lang-btn").forEach(b=>{
+    b.classList.toggle("active", b.dataset.lang === lang);
+  });
+  // 若已有结果，按新语言重渲染标签
+  if ($("result").classList.contains("show")) {
+    const alt = +$("mAlt").textContent || 0;
+    const p = +$("mPress").textContent || 0;
+    const o = +$("mOxy").textContent || 0;
+    const peak = +$("mPeak").textContent || alt;
+    const mTag = $("mTag"); mTag.textContent = t("band-"+altBandKey(alt)); mTag.className = "tag "+altBand(alt).c;
+    const pTag = $("pTag"); pTag.textContent = t(pressBandKey(p)); pTag.className = "tag "+pressBand(p).c;
+    const oTag = $("oTag"); oTag.textContent = t(oxyBandKey(o)); oTag.className = "tag "+oxyBand(o).c;
+    const pkTag = $("pkTag"); pkTag.textContent = t("band-"+altBandKey(peak)); pkTag.className = "tag "+altBand(peak).c;
+    const adv = advice(alt);
+    const advEl = $("advice");
+    if (adv){ advEl.classList.add("show"); advEl.innerHTML = adv; } else advEl.classList.remove("show");
+  }
+}
+// 取 alt/press/oxy band 对应的 key 名
+function altBandKey(hm){ if(hm<500)return"low"; if(hm<2000)return"mid"; if(hm<3500)return"high"; return"danger"; }
+function pressBandKey(p){ if(p>=950)return"pband-950"; if(p>=850)return"pband-850"; if(p>=750)return"pband-750"; return"pband-danger"; }
+function oxyBandKey(o){ const n=+o; if(n>=95)return"oband-95"; if(n>=80)return"oband-80"; if(n>=65)return"oband-65"; return"oband-danger"; }
+
+/* 绑定语言切换 */
+document.querySelectorAll(".lang-btn").forEach(b=>{
+  b.addEventListener("click", ()=>applyLang(b.dataset.lang));
+});
+
+$("chips").innerHTML = CHIPS.map(c => `<span class="chip" data-v="${c}">${c}</span>`).join("");
+
+/* ---- 中国高频地点坐标表（优先命中，规避 Open-Meteo 中文地名误配） ----
+   命中表直接取坐标，零网络、零误配；未命中才回落 geocoding API（建议用拼音/英文输入）。 */
+const CITIES = {
+  "拉萨":[29.65,91.10], "拉萨市":[29.65,91.10],
+  "成都":[30.57,104.07], "成都市":[30.57,104.07],
+  "重庆":[29.56,106.55], "重庆市":[29.56,106.55],
+  "乌鲁木齐":[43.83,87.62], "乌鲁木齐市":[43.83,87.62],
+  "西安":[34.27,108.95], "西安市":[34.27,108.95],
+  "杭州":[30.27,120.16], "杭州市":[30.27,120.16],
+  "黄山":[30.13,118.17], "黄山风景区":[30.13,118.17],
+  "华山":[34.48,110.08], "华山西峰":[34.48,110.08],
+  "张家界":[29.13,110.49], "张家界武陵源":[29.35,110.55],
+  "长白山":[42.00,128.05], "长白山主峰":[42.00,128.05],
+  "五台山":[39.08,113.56], "五台山台怀镇":[39.08,113.56],
+  "张家界大庸":[29.13,110.49],
+  "珠穆朗玛峰":[27.9881,86.9250], "珠穆朗玛":[27.9881,86.9250],
+  "珠穆朗玛峰大本营":[28.049,86.862], "珠峰大本营":[28.049,86.862],
+  "珠峰":[27.9881,86.9250],
+  "布达拉宫":[29.6579,91.1173],
+  "贡嘎山":[29.61,101.83], "贡嘎":[29.61,101.83],
+  "峨眉":[29.61,103.49], "峨眉山":[29.61,103.49],
+  "神农架":[31.69,110.71],
+  "武夷山":[27.75,117.94],
+  "泰山":[36.25,117.10], "五岳泰山":[36.25,117.10],
+  "大理":[25.61,100.27], "丽江":[26.85,100.23],
+  "稻城":[28.44,100.30], "亚丁":[28.53,100.34],
+  "九寨沟":[33.27,103.91],
+  "香格里拉":[27.82,99.70],
+  "峨眉山金顶":[29.52,103.33],
+  "长白山天池":[42.00,128.05],
+  "五台山台怀":[39.08,113.56]
+};
+
+function matchCity(q){
+  const key = (q||"").trim();
+  if (CITIES[key]) return CITIES[key];
+  // 宽松匹配：去空格/去市后缀再试一次
+  const norm = key.replace(/\s+|市$/g,"");
+  if (CITIES[norm]) return CITIES[norm];
+  return null;
+}
+
+/* ---- 城市地理解析：先查内置表，再回落 Open-Meteo geocoding（免 key） ----
+   注：Open-Meteo 对中文输入匹配质量差，中文未命中内置表时建议用拼音/英文输入。 */
+async function geocode(q){
+  const hit = matchCity(q);
+  if (hit) return { name: q.trim(), lat: hit[0], lon: hit[1] };
+  const latin = q.trim(); // 中文可能误配，未命中内置表则走 API（建议拼音/英文输入）
+  const url = "https://geocoding-api.open-meteo.com/v1/search?name=" +
+    encodeURIComponent(latin) + "&count=1&language=zh&format=json";
+  let lastErr;
+  for(let attempt=0; attempt<2; attempt++){
+    try{
+      const r = await fetch(url, {cache:"no-store", signal:AbortSignal.timeout(10000)});
+      const j = await r.json();
+      if(j.results && j.results.length){
+        const g = j.results[0];
+        return {name:g.name, admin:g.admin_1||"", lat:g.latitude, lon:g.longitude};
+      }
+      throw new Error("未找到该城市，请改输入或直接用坐标");
+    }catch(e){ lastErr = e; await new Promise(rs=>setTimeout(rs,1000)); }
+  }
+  throw lastErr;
+}
+
+/* ---- 高程剖面（Open-Meteo elevation，免 key）----
+   以该点为中心、沿 45° 对角采样 20 点，覆盖约 25 km。带重试 + 12s 超时。 */
+async function elevationProfile(lat,lon){
+  const n = 20, lats=[], lons=[];
+  for(let i=0;i<n;i++){
+    const t = i/(n-1) - 0.5;
+    lats.push(+(lat + t*0.22).toFixed(4));
+    lons.push(+(lon + t*0.22).toFixed(4));
+  }
+  const url = "https://api.open-meteo.com/v1/elevation?latitude=" +
+    lats.join(",") + "&longitude=" + lons.join(",");
+  let lastErr;
+  for(let attempt=0; attempt<3; attempt++){
+    try{
+      const r = await fetch(url, {cache:"no-store", signal:AbortSignal.timeout(12000)});
+      const j = await r.json();
+      const data = (j.elevation||[]).map(v=>Math.round(v));
+      if(data.length) return data;
+      lastErr = new Error("剖面数据为空");
+    }catch(e){ lastErr = e; }
+    await new Promise(rs=>setTimeout(rs, 1200));
+  }
+  throw lastErr;
+}
+
+/* ---- 大气压 / 含氧量估算 ---- */
+function pressureH(hm){ return Math.round(1013.25 * Math.exp(-hm/8430)); }
+function oxygen(hm){ return (100 * Math.exp(-hm/8500)).toFixed(1); }
+
+/* ---- 海拔分级（标签文案 i18n 驱动） ---- */
+function altBand(hm){
+  if(hm < 500)   return {k:"band-low",    c:"tag-low"};
+  if(hm < 2000)  return {k:"band-mid",    c:"tag-mid"};
+  if(hm < 3500)  return {k:"band-high",   c:"tag-high"};
+  return {k:"band-danger", c:"tag-danger"};
+}
+function pressBand(p){
+  if(p >= 950)  return {k:"pband-950",    c:"tag-low"};
+  if(p >= 850)  return {k:"pband-850",    c:"tag-mid"};
+  if(p >= 750)  return {k:"pband-750",    c:"tag-high"};
+  return {k:"pband-danger", c:"tag-danger"};
+}
+function oxyBand(o){
+  const n = +o;
+  if(n >= 95) return {k:"oband-95",    c:"tag-low"};
+  if(n >= 80) return {k:"oband-80",    c:"tag-mid"};
+  if(n >= 65) return {k:"oband-65",    c:"tag-high"};
+  return {k:"oband-danger", c:"tag-danger"};
+}
+
+/* ---- 绘制剖面 SVG ---- */
+function drawProfile(profile){
+  const svg = $("profileSvg");
+  const W=1000, H=220, pad=30;
+  if(!profile || profile.length<2){ svg.innerHTML=""; $("profileNote").textContent=t("profile-empty"); return; }
+  const vals = profile;
+  const minV = Math.min(...vals), maxV = Math.max(...vals);
+  const span = Math.max(1, maxV - minV);
+  const step = (W - pad*2) / (vals.length - 1);
+  const pts = vals.map((v,i)=>{
+    const x = pad + i*step;
+    const y = H - pad - ((v - minV)/span)*(H - pad*2);
+    return [x,y];
+  });
+  const line = pts.map((p,i)=> (i?"L":"M")+p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");
+  const area = line + ` L ${pts[pts.length-1][0].toFixed(1)},${H-pad} L ${pad},${H-pad} Z`;
+  // 网格
+  let grid="";
+  for(let g=0;g<=4;g++){
+    const y = pad + g*(H-pad*2)/4;
+    const val = Math.round(maxV - (maxV-minV)*g/4);
+    grid += `<line x1="${pad}" y1="${y}" x2="${W-pad}" y2="${y}" stroke="#242d38" stroke-width="1"/>
+             <text x="8" y="${y+4}" fill="#6b7a8c" font-size="11">${val}</text>`;
+  }
+  // 起点标记
+  const start = pts[0];
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="pa" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#4cc7f5" stop-opacity=".55"/>
+        <stop offset="1" stop-color="#4cc7f5" stop-opacity=".03"/>
+      </linearGradient>
+    </defs>
+    ${grid}
+    <path d="${area}" fill="url(#pa)"/>
+    <path d="${line}" fill="none" stroke="#4cc7f5" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="${start[0]}" cy="${start[1]}" r="5" fill="#7bd389" stroke="#0b0f14" stroke-width="2"/>
+    <text x="${start[0]+8}" y="${start[1]-8}" fill="#7bd389" font-size="12" font-weight="600">${t("start")}</text>
+    <text x="${W-pad-52}" y="${H-8}" fill="#6b7a8c" font-size="11">km →</text>
+  `;
+  const km = "25";
+  $("profileNote").textContent = t("profile-note", {n:vals.length, km});
+}
+
+/* ---- 高原建议（i18n 驱动） ---- */
+function advice(hm){
+  if(hm < 1500) return "";
+  if(hm < 3000) return t("adv-1500");
+  if(hm < 4000) return t("adv-3000");
+  return t("adv-4000");
+}
+
+/* ---- 主流程 ---- */
+async function measure({lat,lon,name,coordOnly}){
+  const status=$("status"); status.className="show"; status.classList.remove("err");
+  status.innerHTML='<span class="spin"></span>'+t("loading");
+  $("result").classList.remove("show");
+  let prof=[];
+  try{
+    prof = await elevationProfile(lat,lon);
+    // 剖面以该点为中心采样，取中间点作为「该地」海拔
+    const alt = prof.length ? Math.round(prof[Math.floor(prof.length/2)]) : 0;
+    showResult({name: name||coordLabel(lat,lon), lat,lon, alt, prof});
+  }catch(e){
+    // 降级：仅坐标估算
+    const alt = estimateAlt(lat,lon);
+    showResult({name: name||coordLabel(lat,lon), lat,lon, alt, prof:[], degraded:true, reason:e.message});
+  }
+  status.classList.remove("show");
+}
+function coordLabel(lat,lon){ return t("coord-label", {lat:lat.toFixed(2), lon:lon.toFixed(2)}); }
+function estimateAlt(lat,lon){ return Math.round(Math.cos(lat*Math.PI/180)*0) || 0; } // 占位，剖面失败时给 0
+
+async function run(){
+  const v = $("placeInput").value.trim();
+  if(!v) return;
+  let g;
+  try{ g = await geocode(v); }
+  catch(e){ $("status").className="show err"; $("status").textContent=t("geo-fail", {msg:e.message}); return; }
+  measure({lat:g.lat, lon:g.lon, name:g.name + (g.admin?(" · "+g.admin):"")});
+}
+
+function showResult({name,lat,lon,alt,prof,degraded,reason}){
+  $("rName").textContent = name;
+  $("rCoords").textContent = lat.toFixed(4)+"°N "+lon.toFixed(4)+"°E";
+  const ab = altBand(alt);
+  $("mAlt").textContent = alt;
+  $("mTag").textContent = t(ab.k); $("mTag").className = "tag "+ab.c;
+
+  const p = pressureH(alt);
+  $("mPress").textContent = p;
+  const pb = pressBand(p); $("pTag").textContent=t(pb.k); $("pTag").className="tag "+pb.c;
+
+  const o = oxygen(alt);
+  $("mOxy").textContent = o;
+  const ob = oxyBand(o); $("oTag").textContent=t(ob.k); $("oTag").className="tag "+ob.c;
+
+  const peak = prof && prof.length ? Math.max(...prof) : alt;
+  $("mPeak").textContent = peak;
+  const pkb = altBand(peak); $("pkTag").textContent=t(pkb.k); $("pkTag").className="tag "+pkb.c;
+
+  drawProfile(prof);
+
+  const adv = advice(alt);
+  const advEl = $("advice");
+  if(adv){ advEl.classList.add("show"); advEl.innerHTML=adv; } else advEl.classList.remove("show");
+
+  if(degraded){
+    $("status").className="show err";
+    $("status").textContent = t("degraded");
+  } else $("status").className="";
+
+  $("result").classList.add("show");
+}
+
+/* 事件 */
+$("searchBtn").onclick = run;
+$("placeInput").onkeydown = e => { if(e.key==="Enter") run(); };
+$("chips").onclick = e => { const c=e.target.closest(".chip"); if(!c)return; $("placeInput").value=c.dataset.v; run(); };
+$("coordBtn").onclick = () => {
+  const lat=+$("latIn").value, lon=+$("lonIn").value;
+  if(isNaN(lat)||isNaN(lon)||Math.abs(lat)>90||Math.abs(lon)>180){
+    $("status").className="show err"; $("status").textContent=t("coord-invalid"); return;
+  }
+  measure({lat,lon,coordOnly:true});
+};
+
+/* 启动：先应用语言（DOM 静态文案 + 持久化偏好），再跑默认演示 */
+window.addEventListener("load", () => {
+  applyLang(CURRENT_LANG);
+  $("latIn").value="36.0671"; $("lonIn").value="103.8343";
+  $("placeInput").value="拉萨";
+  run();
+});
+</script>
+<div class="seo-outer">
+<section class="seo">
+  <h2>海拔高度 · 大气压 · 含氧量：实用对照与高原反应参考</h2>
+  <p>本工具输入<b>城市名称</b>或<b>经纬度</b>后，基于 <a class="ext" href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo Elevation</a> 数字高程模型返回该点<b>真实高程</b>，并给出 25 km 沿线剖面。大气压与含氧量按国际标准大气模型估算：以海平面 1013.25 hPa、含氧量 100% 为基准，随高度指数衰减（大气压 ≈ 1013.25×e<sup>−h/8430</sup>，含氧量 ≈ 100×e<sup>−h/8500</sup>），属参考值而非精确气象数据。</p>
+
+  <h3>常用城市与山峰海拔参考（对照表）</h3>
+  <table>
+    <tr><th>地点</th><th>海拔（m）</th><th>分区</th></tr>
+    <tr><td>上海</td><td>≈ 4</td><td>低海拔</td></tr>
+    <tr><td>北京</td><td>≈ 44</td><td>低海拔</td></tr>
+    <tr><td>成都</td><td>≈ 500</td><td>中低海拔</td></tr>
+    <tr><td>乌鲁木齐</td><td>≈ 920</td><td>中低海拔</td></tr>
+    <tr><td>昆明</td><td>≈ 1890</td><td>中低海拔</td></tr>
+    <tr><td>西宁</td><td>≈ 2261</td><td>高海拔</td></tr>
+    <tr><td>拉萨</td><td>≈ 3650</td><td>极高海拔</td></tr>
+    <tr><td>长白山</td><td>≈ 2691</td><td>高海拔</td></tr>
+    <tr><td>华山</td><td>≈ 2155</td><td>高海拔</td></tr>
+    <tr><td>贡嘎山</td><td>7556</td><td>极高海拔</td></tr>
+    <tr><td>珠穆朗玛峰</td><td>8848.86</td><td>极高海拔</td></tr>
+  </table>
+
+  <h3>高原反应：多高需要注意，血氧多少要警惕</h3>
+  <p>进入高原后，机体对<b>低氧</b>的适应需要 1–3 天。通常 <b>2500 m</b> 以上即进入潜在高原反应（AMS）区，<b>3000 m</b>、<b>4000 m</b> 风险逐级升高；超过 <b>4000 m</b> 属极高海拔，须阶梯适应、避免剧烈运动与饮酒。血氧饱和度在平原约 95%–100%，高海拔会自然下降；若低于 <b>90%</b> 常提示明显缺氧，建议吸氧、休息并监测，出现持续剧烈头痛、呼吸困难、意识模糊需及时下撤就医。</p>
+
+  <h3>延伸阅读 · 数据与权威参考</h3>
+  <ul class="ext">
+    <li>Open-Meteo · Elevation API（本工具高程数据源）：<a href="https://open-meteo.com/en/docs/elevation-api" target="_blank" rel="noopener">Elevation API</a></li>
+    <li>Open-Meteo · Geocoding（城市地理解析）：<a href="https://geocoding-api.open-meteo.com/" target="_blank" rel="noopener">Geocoding API</a></li>
+    <li>USGS · 高程与地形数据：<a href="https://www.usgs.gov/" target="_blank" rel="noopener">USGS</a></li>
+    <li>Peakbagger · 山峰海拔数据库：<a href="https://www.peakbagger.com/" target="_blank" rel="noopener">Peakbagger</a></li>
+    <li>维基百科 · 高原病（AMS）：<a href="https://zh.wikipedia.org/wiki/%E9%AB%98%E5%8E%9F%E7%97%85" target="_blank" rel="noopener">高原病</a></li>
+    <li>维基百科 · 大气压：<a href="https://zh.wikipedia.org/wiki/%E5%A4%A7%E6%B0%A3%E5%8E%8B" target="_blank" rel="noopener">大气压</a></li>
+  </ul>
+  <p style="margin-top:12px;font-size:12px;color:var(--ink3)">更多在线工具：<a href="https://li00000.xyz/">li00000 在线工具集</a> · <a href="https://blog.li00000.xyz/">li00000 博客</a> · <a href="https://tjtkw.li00000.xyz/">健身体脂计算器</a></p>
+</section>
+</div>
+
+</body>
+</html>
