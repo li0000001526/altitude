@@ -18,7 +18,7 @@
 .seo .ext a:hover{text-decoration:underline}
 </style>
 <meta name="description" content="在线海拔测量工具：输入城市或经纬度，查询该点真实高程、沿线 25 公里剖面、大气压与等效含氧量估算，并附高原反应与血氧风险提示。" />
-<meta name="keywords" content="海拔测量,海拔查询,海拔高度,城市海拔,高原反应,高海拔含氧量,大气压对照表,高原血氧,血氧饱和度,珠穆朗玛峰海拔,贡嘎山海拔,海拔大气压,海拔高度计算器,elevation calculator,altitude calculator,atmospheric pressure by altitude,oxygen level at high altitude" />
+<meta name="keywords" content="海拔测量,海拔查询,海拔高度查询,城市海拔,海拔高度对照,高原反应,高原反应怎么办,高原反应症状,高原旅行注意事项,高海拔含氧量,高海拔旅行,大气压对照表,海拔大气压,海拔气压换算,气压换算海拔,高原血氧,高原血氧正常值,血氧饱和度,珠穆朗玛峰海拔,贡嘎山海拔,拉萨海拔,海拔高度计算器,elevation calculator,altitude calculator,atmospheric pressure by altitude,oxygen level at high altitude,altitude sickness" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="海拔测量 · Altitude — 真实高程 / 大气压 / 含氧量在线查询" />
 <meta property="og:description" content="输入城市或坐标，返回该点真实高程与 25 km 沿线剖面，并估算大气压与等效含氧量，附高原反应与血氧风险提示。" />
@@ -27,19 +27,24 @@
 <meta property="og:locale" content="zh_CN" />
 <meta name="twitter:card" content="summary" />
 <script type="application/ld+json">
-{"@context":"https://***","@type":"WebApplication","name":"海拔测量 · Altitude","alternateName":["海拔查询工具","海拔高度计算器","高海拔含氧量估算","大气压海拔对照","高原反应提示工具"],"url":"https://izxgs.li00000.xyz/","applicationCategory":"OtherApplication","operatingSystem":"Any","inLanguage":"zh-CN","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"featureList":["城市/经纬度查真实高程","沿线 25km 高程剖面","大气压估算","含氧量估算","高原反应风险提示"],"publisher":{"@type":"Organization","name":"li00000 在线工具集","url":"https://li00000.xyz/"}}
+{"@context":"https://***","@type":"WebApplication","name":"海拔测量 · Altitude","alternateName":["海拔查询工具","海拔高度计算器","高海拔含氧量估算","大气压海拔对照","高原反应提示工具","高原反应怎么办","海拔气压换算","高原血氧正常值查询"],"url":"https://izxgs.li00000.xyz/","applicationCategory":"OtherApplication","operatingSystem":"Any","inLanguage":"zh-CN","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"},"featureList":["城市/经纬度查真实高程","沿线 25km 高程剖面","大气压估算","含氧量估算","高原反应风险提示","海拔气压对照表"],"publisher":{"@type":"Organization","name":"li00000 在线工具集","url":"https://li00000.xyz/"}}
 </script>
 <script type="application/ld+json">
 {"@context":"https://***","@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"海拔高的大气压和含氧量怎么估算？","acceptedAnswer":{"@type":"Answer","text":"以海平面 1013.25 hPa、含氧量 100% 为基准，随高度按指数衰减：大气压 ≈ 1013.25×e^(−h/8430)，等效含氧量 ≈ 100×e^(−h/8500)。这是标准大气模型近似，非精确气象值。"}},
 {"@type":"Question","name":"多高会高原反应？","acceptedAnswer":{"@type":"Answer","text":"一般 2500m 以上进入潜在高原反应（AMS）区，3000m、4000m 风险逐级升高。高于 4000m 属极高海拔，务必阶梯适应、避免剧烈运动与饮酒，必要时携带血氧仪并就医。"}},
 {"@type":"Question","name":"血氧饱和度多少算危险？","acceptedAnswer":{"@type":"Answer","text":"平原正常血氧饱和度约 95%–100%；高海拔下会自然下降，若低于 90% 常提示明显缺氧，建议吸氧、休息并监测，严重呼吸困难或持续头痛需及时下撤就医。"}},
-{"@type":"Question","name":"拉萨、珠峰大本营海拔多少？","acceptedAnswer":{"@type":"Answer","text":"拉萨约 3650 m，珠峰大本营约 5200 m，珠峰顶 8848.86 m。本工具可直接输入这些地点查询，得到实时高程与沿线剖面。"}}
+{"@type":"Question","name":"拉萨、珠峰大本营海拔多少？","acceptedAnswer":{"@type":"Answer","text":"拉萨约 3650 m，珠峰大本营约 5200 m，珠峰顶 8848.86 m。本工具可直接输入这些地点查询，得到实时高程与沿线剖面。"}},
+{"@type":"Question","name":"高原反应怎么办？怎么缓解？","acceptedAnswer":{"@type":"Answer","text":"出现高原反应（头痛、气短、乏力、失眠）应：①放慢行动、避免剧烈运动；②多饮水、保证睡眠；③保持阶梯适应，不要一天内爬太高；④必要时使用吸氧并就医。若出现剧烈头痛、呕吐、呼吸急促或意识模糊（警惕高原肺水肿/脑水肿），立即下撤并就医。"}},
+{"@type":"Question","name":"高原反应有哪些症状？","acceptedAnswer":{"@type":"Answer","text":"常见高原反应（AMS）症状包括：头痛、头晕、气短、心悸、乏力、失眠、食欲下降、恶心。症状多于到达高原后 6–24 小时内出现，大多数人 1–3 天逐步适应。"}},
+{"@type":"Question","name":"高原旅行要注意什么？","acceptedAnswer":{"@type":"Answer","text":"进高原前 1–2 天保证休息与补水；抵达后 24 小时避免剧烈运动、饮酒与快速洗澡；动作放缓、少量多餐；准备氧气瓶/血氧仪；关注天气与路线，避免夜间赶路。"}},
+{"@type":"Question","name":"海拔多少对应多大气压？怎么换算？","acceptedAnswer":{"@type":"Answer","text":"常用标准大气模型：大气压 ≈ 1013.25×e^(−h/8430) hPa。例如海拔 0 m≈1013 hPa，1000 m≈899 hPa，2000 m≈795 hPa，3000 m≈701 hPa，4000 m≈616 hPa。可用本工具按城市/坐标直接查询。"}},
+{"@type":"Question","name":"高原上血氧正常值是多少？","acceptedAnswer":{"@type":"Answer","text":"血氧饱和度随海拔升高而自然下降：约 3000 m 平均 85–90%，4000 m 平均 80–85%，5000 m 可降至 75% 左右。个体差异较大，持续监测、低于 90% 且伴随明显症状时应吸氧、休息并及时就医。"}}
 ]}
 </script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>海拔测量 · Altitude</title>
+<title>海拔查询 · 高原反应与大气压测量工具</title>
 <style>
 :root{
   --bg:#0b0f14;
@@ -222,7 +227,7 @@ footer a{color:var(--ink2);text-decoration:none}
     <div class="brand">
       <div class="logo"></div>
       <div>
-        <h1 id="t-brand">海拔测量 · Altitude</h1>
+        <h1 id="t-brand">海拔查询 · 高原反应与大气压测量工具</h1>
         <p id="t-sub">真实高程查询 · 沿线剖面 · 高原提示</p>
       </div>
     </div>
@@ -320,7 +325,7 @@ const CHIPS = ["拉萨","珠穆朗玛峰大本营","成都","乌鲁木齐","张�
 const I18N = {
   "zh-Hans": {
     lang: "zh-CN", label: "简体中文",
-    "brand": "海拔测量 · Altitude", "sub": "真实高程查询 · 沿线剖面 · 高原提示",
+    "brand": "海拔查询 · 高原反应与大气压测量工具", "sub": "真实高程查询 · 沿线剖面 · 高原提示",
     "src": "数据源：Open-Meteo Elevation API",
     "hero-title": "查一个地点的真实海拔", "hero-sub": "输入城市或坐标，返回该点高程与 25 公里沿线剖面。",
     "search": "测量海拔", "coord-btn": "按坐标测量", "coord-hint": "直接输入坐标可绕过城市解析",
@@ -775,6 +780,25 @@ window.addEventListener("load", () => {
 
   <h3>高原反应：多高需要注意，血氧多少要警惕</h3>
   <p>进入高原后，机体对<b>低氧</b>的适应需要 1–3 天。通常 <b>2500 m</b> 以上即进入潜在高原反应（AMS）区，<b>3000 m</b>、<b>4000 m</b> 风险逐级升高；超过 <b>4000 m</b> 属极高海拔，须阶梯适应、避免剧烈运动与饮酒。血氧饱和度在平原约 95%–100%，高海拔会自然下降；若低于 <b>90%</b> 常提示明显缺氧，建议吸氧、休息并监测，出现持续剧烈头痛、呼吸困难、意识模糊需及时下撤就医。</p>
+
+  <h3>海拔–大气压–含氧量对照表（气压换算海拔参考）</h3>
+  <table>
+    <tr><th>海拔（m）</th><th>大气压（hPa）</th><th>等效含氧量</th><th>血氧饱和度参考</th></tr>
+    <tr><td>0</td><td>1013</td><td>100%</td><td>95–100%</td></tr>
+    <tr><td>500</td><td>956</td><td>94.2%</td><td>94–98%</td></tr>
+    <tr><td>1000</td><td>899</td><td>88.7%</td><td>92–96%</td></tr>
+    <tr><td>1500</td><td>845</td><td>83.3%</td><td>90–95%</td></tr>
+    <tr><td>2000</td><td>795</td><td>78.2%</td><td>88–93%</td></tr>
+    <tr><td>2500</td><td>748</td><td>73.4%</td><td>86–91%</td></tr>
+    <tr><td>3000</td><td>701</td><td>68.9%</td><td>85–90%</td></tr>
+    <tr><td>3500</td><td>657</td><td>64.7%</td><td>83–88%</td></tr>
+    <tr><td>4000</td><td>616</td><td>60.8%</td><td>80–85%</td></tr>
+    <tr><td>5000</td><td>540</td><td>53.2%</td><td>75–82%</td></tr>
+  </table>
+  <p>表内大气压、含氧量按标准大气模型估算，血氧饱和度为一般人群经验区间（个体差异大）；精确值请用上方工具按地点实时查询。</p>
+
+  <h3>高原反应的症状、缓解与旅行准备（高原反应怎么办）</h3>
+  <p><b>常见症状</b>：头痛、头晕、气短、心悸、乏力、失眠、食欲下降、恶心，多在到达高原后 6–24 小时出现，1–3 天逐步适应。<b>缓解办法</b>：放慢行动、避免剧烈运动；多饮水、少量多餐、保证睡眠；不饮酒；必要时吸氧并监测血氧。出现<b>剧烈头痛、呕吐、呼吸急促或意识模糊</b>（警惕高原肺水肿/脑水肿）应<b>立即下撤并就医</b>。<b>进高原前准备</b>：提前 1–2 天休息与补水，备氧气瓶与血氧仪，避开高海拔夜行赶路，选阶梯式路线（如西宁→甘南→青海湖→拉萨）。</p>
 
   <h3>延伸阅读 · 数据与权威参考</h3>
   <ul class="ext">
